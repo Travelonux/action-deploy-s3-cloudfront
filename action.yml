@@ -1,43 +1,43 @@
-name: 'node-npm-cache'
-description: 'Checkout Code, Setup Node and NPM Cache by SO'
+name: 'action-deploy-s3-cloudfront'
+description: 'Publish on S3 and invalidate Cloudfront'
 
-inputs:
-  token:
+inputs:  
+  aws-s3-bucket:
     required: true
-    description: 'token'
-  fetch-depth:
-    required: false
-    description: 'fetch-depth'
-    default: 1
-  ref:
-    required: false
-    description: 'ref'
-    default: ''    
-  node-version:
-    required: false
-    description: 'node version'
-    default: '16.x'
+    description: 'aws s3 bucket'
+  aws-s3-region:
+    required: true
+    description: 'aws s3 region'
+  source-dir:
+    required: true
+    description: 'source-dir'
+  aws-cloudfront-distribution:
+    required: true
+    description: 'aws cloudfront distribution'
+  aws-cloudfront-region:
+    required: true
+    description: 'aws cloudfront region'    
 
 runs:
   using: "composite"
-  steps:
-    - uses: actions/checkout@v3
+  steps:          
+    - uses: jakejarvis/s3-sync-action@v0
       with:
-        fetch-depth: ${{ inputs.fetch-depth }}
-        token: ${{ inputs.token }}
-        ref: ${{ inputs.ref }}
+        args: --follow-symlinks --delete
+      env:
+        AWS_S3_BUCKET: ${{ inputs.aws-s3-bucket }}
+        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}  # comprobar si trabaja sino pasarlo como input
+        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_KEY }} # comprobar si trabaja sino pasarlo como input
+        AWS_REGION: ${{ inputs.aws-s3-region }}
+        SOURCE_DIR: ${{ inputs.source-dir }}
         
-    - name: Set up Node.js ${{ inputs.node-version }}
-      uses: actions/setup-node@v3
-      with:
-        node-version: ${{ inputs.node-version }}
-
-    - uses: actions/cache@v3
-      with:
-        path: ~/.npm
-        key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
-        restore-keys: |
-          ${{ runner.os }}-node-
+    - uses: chetan/invalidate-cloudfront-action@v2
+      env:
+        DISTRIBUTION: ${{ inputs.aws-cloudfront-distribution }}
+        PATHS: "/index.html" 
+        AWS_REGION: ${{ inputs.aws-cloudfront-region }}
+        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}  # comprobar si trabaja sino pasarlo como input
+        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_KEY }} # comprobar si trabaja sino pasarlo como input           
 
 branding:
   icon: 'aperture'
