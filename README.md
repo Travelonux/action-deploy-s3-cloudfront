@@ -1,6 +1,6 @@
-# action-node-npm-cache
+# action-deploy-s3-cloudfront
 
-Checkout Code, Setup Node and NPM Cache by SO
+Publish on S3 and invalidate Cloudfront
 
 ## Usage
 
@@ -13,10 +13,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       # Add like first step
-      - name: Checkout / Setup Node / NPM-Cache
-        uses: rodobarcaaa/action-node-npm-cache@main
+      - name: Deploy on S3 / Invalidate CloudFront
+        uses: Travelonux/action-deploy-s3-cloudfront@main
         with:
-          token: ${{ secrets.REPO_GITHUB_TOKEN }}
+          token: ${{ secrets.GITHUB_TOKEN }}
 
       #... next steps ...     
 
