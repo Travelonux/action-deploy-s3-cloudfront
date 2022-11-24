@@ -27,7 +27,7 @@ inputs:
 runs:
   using: "composite"
   steps:          
-    - uses: jakejarvis/s3-sync-action@v0
+    - uses: jakejarvis/s3-sync-action@v0.5.1
       with:
         args: --follow-symlinks --delete
       env:
