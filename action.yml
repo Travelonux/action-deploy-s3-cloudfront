@@ -16,7 +16,13 @@ inputs:
     description: 'aws cloudfront distribution'
   aws-cloudfront-region:
     required: true
-    description: 'aws cloudfront region'    
+    description: 'aws cloudfront region'  
+  aws-acces-key-id:
+    required: true
+    description: 'aws acces key id' 
+  aws-secret-key:
+    required: true
+    description: 'aws secret key'     
 
 runs:
   using: "composite"
@@ -26,8 +32,8 @@ runs:
         args: --follow-symlinks --delete
       env:
         AWS_S3_BUCKET: ${{ inputs.aws-s3-bucket }}
-        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}  # comprobar si trabaja sino pasarlo como input
-        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_KEY }} # comprobar si trabaja sino pasarlo como input
+        AWS_ACCESS_KEY_ID: ${{ inputs.aws-acces-key-id }}
+        AWS_SECRET_ACCESS_KEY: ${{ inputs.aws-secret-key }} 
         AWS_REGION: ${{ inputs.aws-s3-region }}
         SOURCE_DIR: ${{ inputs.source-dir }}
         
@@ -36,8 +42,8 @@ runs:
         DISTRIBUTION: ${{ inputs.aws-cloudfront-distribution }}
         PATHS: "/index.html" 
         AWS_REGION: ${{ inputs.aws-cloudfront-region }}
-        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}  # comprobar si trabaja sino pasarlo como input
-        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_KEY }} # comprobar si trabaja sino pasarlo como input           
+        AWS_ACCESS_KEY_ID: ${{ inputs.aws-acces-key-id }}
+        AWS_SECRET_ACCESS_KEY: ${{ inputs.aws-secret-key }}          
 
 branding:
   icon: 'aperture'
