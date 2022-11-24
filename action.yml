@@ -17,9 +17,9 @@ inputs:
   aws-cloudfront-region:
     required: true
     description: 'aws cloudfront region'  
-  aws-acces-key-id:
+  aws-access-key-id:
     required: true
-    description: 'aws acces key id' 
+    description: 'aws access key id' 
   aws-secret-key:
     required: true
     description: 'aws secret key'     
@@ -32,7 +32,7 @@ runs:
         args: --follow-symlinks --delete
       env:
         AWS_S3_BUCKET: ${{ inputs.aws-s3-bucket }}
-        AWS_ACCESS_KEY_ID: ${{ inputs.aws-acces-key-id }}
+        AWS_ACCESS_KEY_ID: ${{ inputs.aws-access-key-id }}
         AWS_SECRET_ACCESS_KEY: ${{ inputs.aws-secret-key }} 
         AWS_REGION: ${{ inputs.aws-s3-region }}
         SOURCE_DIR: ${{ inputs.source-dir }}
@@ -42,7 +42,7 @@ runs:
         DISTRIBUTION: ${{ inputs.aws-cloudfront-distribution }}
         PATHS: "/index.html" 
         AWS_REGION: ${{ inputs.aws-cloudfront-region }}
-        AWS_ACCESS_KEY_ID: ${{ inputs.aws-acces-key-id }}
+        AWS_ACCESS_KEY_ID: ${{ inputs.aws-access-key-id }}
         AWS_SECRET_ACCESS_KEY: ${{ inputs.aws-secret-key }}          
 
 branding:
