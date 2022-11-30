@@ -1,7 +1,10 @@
 name: 'action-deploy-s3-cloudfront'
 description: 'Publish on S3 and invalidate Cloudfront'
 
-inputs:  
+inputs:
+  env:
+    required: true
+    description: 'env to deploy'
   aws-s3-bucket:
     required: true
     description: 'aws s3 bucket'
@@ -16,34 +19,52 @@ inputs:
     description: 'aws cloudfront distribution'
   aws-cloudfront-region:
     required: true
-    description: 'aws cloudfront region'  
+    description: 'aws cloudfront region'
   aws-access-key-id:
     required: true
-    description: 'aws access key id' 
+    description: 'aws access key id'
   aws-secret-key:
     required: true
-    description: 'aws secret key'     
+    description: 'aws secret key'
 
 runs:
   using: "composite"
-  steps:          
+  steps:
+    - name: start deployment
+      uses: bobheadxi/deployments@v1.3.0
+      id: deployment
+      with:
+        step: start
+        token: ${{ secrets.GITHUB_TOKEN }}
+        env: ${{ inputs.env }}
+
     - uses: jakejarvis/s3-sync-action@v0.5.1
       with:
         args: --follow-symlinks --delete
       env:
         AWS_S3_BUCKET: ${{ inputs.aws-s3-bucket }}
         AWS_ACCESS_KEY_ID: ${{ inputs.aws-access-key-id }}
-        AWS_SECRET_ACCESS_KEY: ${{ inputs.aws-secret-key }} 
+        AWS_SECRET_ACCESS_KEY: ${{ inputs.aws-secret-key }}
         AWS_REGION: ${{ inputs.aws-s3-region }}
         SOURCE_DIR: ${{ inputs.source-dir }}
-        
+
     - uses: chetan/invalidate-cloudfront-action@v2
       env:
         DISTRIBUTION: ${{ inputs.aws-cloudfront-distribution }}
-        PATHS: "/index.html" 
+        PATHS: "/index.html"
         AWS_REGION: ${{ inputs.aws-cloudfront-region }}
         AWS_ACCESS_KEY_ID: ${{ inputs.aws-access-key-id }}
-        AWS_SECRET_ACCESS_KEY: ${{ inputs.aws-secret-key }}          
+        AWS_SECRET_ACCESS_KEY: ${{ inputs.aws-secret-key }}
+
+    - name: finish deployment
+      uses: bobheadxi/deployments@v1.3.0
+      if: always()
+      with:
+        step: finish
+        token: ${{ secrets.GITHUB_TOKEN }}
+        status: ${{ job.status }}
+        env: ${{ steps.deployment.outputs.env }}
+        deployment_id: ${{ steps.deployment.outputs.deployment_id }}
 
 branding:
   icon: 'aperture'
