@@ -5,6 +5,9 @@ inputs:
   env:
     required: true
     description: 'env to deploy'
+  token:
+    required: true
+    description: 'token to deploy'  
   aws-s3-bucket:
     required: true
     description: 'aws s3 bucket'
@@ -35,7 +38,7 @@ runs:
       id: deployment
       with:
         step: start
-        token: ${{ secrets.GITHUB_TOKEN }}
+        token: ${{ inputs.token }}
         env: ${{ inputs.env }}
 
     - uses: jakejarvis/s3-sync-action@v0.5.1
@@ -61,7 +64,7 @@ runs:
       if: always()
       with:
         step: finish
-        token: ${{ secrets.GITHUB_TOKEN }}
+        token: ${{ inputs.token }}
         status: ${{ job.status }}
         env: ${{ steps.deployment.outputs.env }}
         deployment_id: ${{ steps.deployment.outputs.deployment_id }}
