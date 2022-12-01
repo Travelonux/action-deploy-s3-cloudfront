@@ -33,13 +33,13 @@ inputs:
 runs:
   using: "composite"
   steps:
-    - name: start deployment
-      uses: bobheadxi/deployments@v1.3.0
-      id: deployment
-      with:
-        step: start
-        token: ${{ inputs.token }}
-        env: ${{ inputs.env }}
+#     - name: start deployment
+#       uses: bobheadxi/deployments@v1.3.0
+#       id: deployment
+#       with:
+#         step: start
+#         token: ${{ inputs.token }}
+#         env: ${{ inputs.env }}
 
     - uses: jakejarvis/s3-sync-action@v0.5.1
       with:
@@ -59,15 +59,15 @@ runs:
         AWS_ACCESS_KEY_ID: ${{ inputs.aws-access-key-id }}
         AWS_SECRET_ACCESS_KEY: ${{ inputs.aws-secret-key }}
 
-    - name: finish deployment
-      uses: bobheadxi/deployments@v1.3.0
-      if: always()
-      with:
-        step: finish
-        token: ${{ inputs.token }}
-        status: ${{ job.status }}
-        env: ${{ steps.deployment.outputs.env }}
-        deployment_id: ${{ steps.deployment.outputs.deployment_id }}
+#     - name: finish deployment
+#       uses: bobheadxi/deployments@v1.3.0
+#       if: always()
+#       with:
+#         step: finish
+#         token: ${{ inputs.token }}
+#         status: ${{ job.status }}
+#         env: ${{ steps.deployment.outputs.env }}
+#         deployment_id: ${{ steps.deployment.outputs.deployment_id }}
 
 branding:
   icon: 'aperture'
