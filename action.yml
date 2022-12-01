@@ -2,12 +2,6 @@ name: 'action-deploy-s3-cloudfront'
 description: 'Publish on S3 and invalidate Cloudfront'
 
 inputs:
-  env:
-    required: true
-    description: 'env to deploy'
-  token:
-    required: true
-    description: 'token to deploy'  
   aws-s3-bucket:
     required: true
     description: 'aws s3 bucket'
@@ -33,14 +27,6 @@ inputs:
 runs:
   using: "composite"
   steps:
-#     - name: start deployment
-#       uses: bobheadxi/deployments@v1.3.0
-#       id: deployment
-#       with:
-#         step: start
-#         token: ${{ inputs.token }}
-#         env: ${{ inputs.env }}
-
     - uses: jakejarvis/s3-sync-action@v0.5.1
       with:
         args: --follow-symlinks --delete
@@ -58,16 +44,6 @@ runs:
         AWS_REGION: ${{ inputs.aws-cloudfront-region }}
         AWS_ACCESS_KEY_ID: ${{ inputs.aws-access-key-id }}
         AWS_SECRET_ACCESS_KEY: ${{ inputs.aws-secret-key }}
-
-#     - name: finish deployment
-#       uses: bobheadxi/deployments@v1.3.0
-#       if: always()
-#       with:
-#         step: finish
-#         token: ${{ inputs.token }}
-#         status: ${{ job.status }}
-#         env: ${{ steps.deployment.outputs.env }}
-#         deployment_id: ${{ steps.deployment.outputs.deployment_id }}
 
 branding:
   icon: 'aperture'
