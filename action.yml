@@ -40,7 +40,7 @@ runs:
     - uses: chetan/invalidate-cloudfront-action@v2
       env:
         DISTRIBUTION: ${{ inputs.aws-cloudfront-distribution }}
-        PATHS: "/index.html"
+        PATHS: "/ /index.html"
         AWS_REGION: ${{ inputs.aws-cloudfront-region }}
         AWS_ACCESS_KEY_ID: ${{ inputs.aws-access-key-id }}
         AWS_SECRET_ACCESS_KEY: ${{ inputs.aws-secret-key }}
